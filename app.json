@@ -1,0 +1,14 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/set/set"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "backgroundColor":"#1c1c1c",
+    "navigationBarBackgroundColor": "#1c1c1c",
+    "navigationBarTitleText": "课程表",
+    "navigationBarTextStyle":"white",
+    "enablePullDownRefresh": true
+  }
+}
