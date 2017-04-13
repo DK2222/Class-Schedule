@@ -1,4 +1,5 @@
-var app = getApp()
+var app = getApp();
+var BmobUser = require('../../utils/bmobuser.js');
 
 // userInfo: 用户信息
 // tabs: tab标题
@@ -19,6 +20,56 @@ Page({
   },
 
   onLoad: function () {
+
+    // 查找16移动应用的所有课程并打印
+    // BmobUser.getAll('Classes', function (res) {
+    //   for (var i = 0; i < res.length; i++) {
+    //     var data = res[i].attributes;
+    //     if (data.Name == "16语文教育1班") {
+    //       BmobUser.getOneById('Courses', data.CoursesId, function (res2) {
+    //         console.log(res2.attributes);
+    //       });
+    //     }
+    //   }
+    // });
+
+    BmobUser.add('Courses', {
+      Data: [
+        { CourseName: "毛泽东思想和中国特色社会主义理论体系概论", Teacher: "李梓烽", Room: "阶梯B211室", Weeks: "1-18", Day: "1", Start: "1", End: "2" },
+        { CourseName: "高职实用英语(文科)", Teacher: "Prentice Alston", Room: "教B201", Weeks: "9-11", Day: "1", Start: "3", End: "4" },
+        { CourseName: "高职实用英语(文科)", Teacher: "黄启汉", Room: "教B201", Weeks: "1-8", Day: "1", Start: "3", End: "4" },
+        { CourseName: "高职实用英语(文科)", Teacher: "黄启汉", Room: "教B201", Weeks: "12-18", Day: "1", Start: "3", End: "4" },
+        { CourseName: "中国现当代文学", Teacher: "胡勇", Room: "教B109", Weeks: "13-13", Day: "1", Start: "5", End: "6" },
+        { CourseName: "现代汉语", Teacher: "陈珊", Room: "教B209", Weeks: "1-18", Day: "1", Start: "7", End: "8" },
+        { CourseName: "高职应用数学3", Teacher: "秦晓林", Room: "教B209", Weeks: "1-18", Day: "2", Start: "1", End: "2" },
+        { CourseName: "中国现当代文学", Teacher: "胡勇", Room: "主楼103", Weeks: "1-7", Day: "2", Start: "3", End: "4" },
+        { CourseName: "中国现当代文学", Teacher: "胡勇", Room: "主楼103", Weeks: "9-18", Day: "2", Start: "3", End: "4" },
+        { CourseName: "教育学", Teacher: "陈龙图", Room: "阶梯B210室", Weeks: "18-18", Day: "2", Start: "7", End: "7" },
+        { CourseName: "教育学", Teacher: "陈龙图", Room: "阶梯B210室", Weeks: "14-17", Day: "2", Start: "7", End: "8" },
+        { CourseName: "五邑侨乡文化概论(创业精神)", Teacher: "李梓烽", Room: "阶梯B211室", Weeks: "16-18", Day: "2", Start: "10", End: "11" },
+        { CourseName: "基础写作", Teacher: "覃碧卿", Room: "教B206", Weeks: "1-18", Day: "3", Start: "1", End: "2" },
+        { CourseName: "中国古代文学", Teacher: "王洪生", Room: "教B203", Weeks: "1-18", Day: "3", Start: "3", End: "4" },
+        { CourseName: "毛泽东思想和中国特色社会主义理论体系概论", Teacher: "李梓烽", Room: "阶梯B111室", Weeks: "2-2", Day: "3", Start: "5", End: "6" },
+        { CourseName: "计算机应用基础", Teacher: "叶振安", Room: "电脑7室(实A504)", Weeks: "3-6", Day: "3", Start: "10", End: "12" },
+        { CourseName: "计算机应用基础", Teacher: "叶振安", Room: "图403(电脑15室)", Weeks: "1-2", Day: "3", Start: "10", End: "12" },
+        { CourseName: "毛泽东思想和中国特色社会主义理论体系概论", Teacher: "李梓烽", Room: "阶梯B211室", Weeks: "1-1", Day: "4", Start: "1", End: "2" },
+        { CourseName: "毛泽东思想和中国特色社会主义理论体系概论", Teacher: "李梓烽", Room: "阶梯B211室", Weeks: "3-12", Day: "4", Start: "1", End: "2" },
+        { CourseName: "五邑侨乡文化概论(创业精神)", Teacher: "李梓烽", Room: "阶梯B211室", Weeks: "13-18", Day: "4", Start: "1", End: "2" },
+        { CourseName: "教育学", Teacher: "陈龙图", Room: "阶梯B210室", Weeks: "1-18", Day: "4", Start: "3", End: "4" },
+        { CourseName: "高职实用英语(文科)", Teacher: "黄启汉", Room: "教B201", Weeks: "1-10", Day: "4", Start: "5", End: "6" },
+        { CourseName: "高职实用英语(文科)", Teacher: "黄启汉", Room: "教B201", Weeks: "11-11", Day: "4", Start: "6", End: "6" },
+        { CourseName: "体育与健康", Teacher: "马林图", Room: "篮球场1", Weeks: "1-18", Day: "4", Start: "7", End: "8" },
+        { CourseName: "计算机应用基础", Teacher: "叶振安", Room: "图403(电脑15室)", Weeks: "1-18", Day: "5", Start: "1", End: "2" },
+        { CourseName: "形势与政策", Teacher: "谢进伟", Room: "阶梯B210室", Weeks: "12-13", Day: "5", Start: "3", End: "4" },
+        { CourseName: "中国古代文学", Teacher: "王洪生", Room: "教B203", Weeks: "1-18", Day: "5", Start: "5", End: "6" },
+        { CourseName: "毛泽东思想和中国特色社会主义理论体系概论", Teacher: "李梓烽", Room: "没教室", Weeks: "20-20", Day: "7", Start: "1", End: "12" }
+      ]
+    }, function (res) {
+      BmobUser.add('Classes',{
+        Name:"16语文教育1班",
+        CoursesId:res.id
+      },function (res){})
+    })
 
     // 初始化
     setUserInfo(this)

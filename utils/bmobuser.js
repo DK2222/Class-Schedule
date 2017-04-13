@@ -77,10 +77,10 @@ function dele(TableName, Id) {
     });
 }
 
-function getAll(TableName) {
+function getAll(TableName, Cb) {
     getBmobQuerySubclass(TableName).find({
         success: function (results) {
-            return results;
+            Cb(results);
         },
         error: function (error) {
             alert("查询失败: " + error.code + " " + error.message);
@@ -89,10 +89,10 @@ function getAll(TableName) {
 }
 
 
-function getOneById(TableName, Id) {
+function getOneById(TableName, Id, Cb) {
     getBmobQuerySubclass(TableName).get(Id, {
         success: function (result) {
-            return result;
+            Cb(result);
         },
         error: function (object, error) {
             // 查询失败
