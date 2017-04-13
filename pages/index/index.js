@@ -106,3 +106,106 @@ function openWelcomeText(that) {
     welcomeText: ((h < 3) ? '赶紧睡吧' : ((h < 12) ? '早上好' : ((h < 19) ? '下午好' : '晚上好')))
   })
 }
+
+
+
+// //参数为所有课程,本周周数,星期几
+// //筛选今日课程并同步到本地
+// function syncTodayCourses(allCourses, week, day) {
+//     setTimeout(function () {
+//         var tmpCourses = []
+//         for (var i = 0; i < allCourses.length; i++) {
+//             var weeks = allCourses[i].weeks.split("-")
+//             if (((allCourses[i]).day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
+//                 tmpCourses.push(allCourses[i])
+//             }
+//         }
+//         wx.setStorageSync('todayCourses', tmpCourses)
+//     }, 500)
+// }
+
+// //返回距离上次同步时间的天数，之前没有同步则返回-1
+// function getLastSyncTime(syncName) {
+//     let i = wx.getStorageSync(syncName)
+//     if ((i + "") == "") {
+//         return -1
+//     } else {
+//         return (new Date() - i) / (10000 * 60 * 60 * 24)
+//     }
+// }
+
+
+// //返回一个Bmob云数据库连接对象
+// function bmob(TableName, type) {
+//     var Bmob = require('../../utils/bmob.js')
+//     if (type == 'add') {
+//         var tmp = Bmob.Object.extend(TableName)
+//         return new tmp()
+//     } else if (type == 'find') {
+//         return new Bmob.Query(Bmob.Object.extend(TableName))
+//     }
+// }
+
+// //同步班别课程列表
+// //并记录同步时间
+// function syncClassCourses() {
+//     sync('ClassCourse', 'classCourses', 'syncClassCoursesBeforeTime')
+// }
+
+// //获取课程通知
+// //并记录同步时间
+// function syncCourseNotes() {
+//     sync('CourseNote', 'courseNotes', 'syncCourseNotesBeforeTime')
+// }
+
+// //从云数据库获取数据
+// //并记录同步时间
+// function sync(TableName, syncName, syncTime) {
+//     var tmp = bmob(TableName, 'find')
+//     tmp.find({
+//         success: function (results) {
+//             wx.setStorageSync(syncName, results)
+//             wx.setStorageSync(syncTime, new Date())
+//         },
+//         error: function (error) {
+//             alert("查询失败: " + error.code + " " + error.message);
+//         }
+//     });
+// }
+
+
+// // 添加课程通知
+// function addCourseNote(className, content) {
+//     var courseNote = bmob("CourseNote", 'add')
+//     courseNote.set("data", {
+//         "className": className,
+//         "content": content
+//     });
+//     //添加数据，第一个入口参数是null
+//     courseNote.save(null, {
+//         success: function (result) {
+//             // 添加成功，返回成功之后的objectId（注意：返回的属性名字是id，不是objectId），你还可以在Bmob的Web管理后台看到对应的数据
+//             console.log("创建成功, objectId:" + result.id);
+//         },
+//         error: function (result, error) {
+//             // 添加失败
+//             console.log('创建失败');
+
+//         }
+//     });
+// }
+
+// //删除
+// function deleteCourseNote(courseNoteId) {
+//     var courseNote = new bmob("CourseNote", 'find')
+//     courseNote.get(courseNoteId);
+//     courseNote.destroy({
+//         success: function (myObject) {
+//             // 删除成功
+//         },
+//         error: function (myObject, error) {
+//             // 删除失败
+//         }
+//     });
+// }
+
