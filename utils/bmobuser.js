@@ -1,4 +1,4 @@
-var Bmob = require('../../utils/bmob.js');
+var Bmob = require('bmob.js');
 
 // 创建一个Bmob子类并返回
 function getBmobSubclass(TableName) {
@@ -14,10 +14,11 @@ function getBmobQuerySubclass(TableName) {
 
 // 添加一个json对象到数据库表
 // {字段名：值}
-function add(TableName, Object) {
+function add(TableName, Object, Cb) {
     getBmobSubclass(TableName).save(
         Object, {
             success: function (result) {
+                Cb(result);
             },
             error: function (result, error) {
                 console.log("添加失败");
@@ -88,7 +89,6 @@ function getAll(TableName) {
 }
 
 
-// module.exports.syncTodayCourses = syncTodayCourses
 function getOneById(TableName, Id) {
     getBmobQuerySubclass(TableName).get(Id, {
         success: function (result) {
@@ -103,3 +103,13 @@ function getOneById(TableName, Id) {
 // function equalTo(fieldName) {
 //     query.equalTo("title", "bmob");
 // }
+
+
+module.exports.getBmobSubclass = getBmobSubclass
+module.exports.getBmobQuerySubclass = getBmobQuerySubclass;
+module.exports.add = add;
+module.exports.getById = getById;
+module.exports.updataById = updataById;
+module.exports.dele = dele;
+module.exports.getAll = getAll;
+module.exports.getOneById = getOneById;
