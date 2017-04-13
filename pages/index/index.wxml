@@ -12,12 +12,10 @@
       <view class="weui-tab__panel">
 
         <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
-          <!--<image src="{{BingPhotoURL}}"></image>
-          {{BingPhotoText}}-->
-          <!--{{welcomeText}}-->
         </view>
 
-        <view class="weui-tab__content" hidden="{{activeIndex != 1}}">选项二的内容</view>
+        <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+        </view>
 
       </view>
     </view>

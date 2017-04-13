@@ -36,28 +36,6 @@ Page({
   },
 })
 
-// 必应图片URL并本地同步到'BingPhotoURL',
-// 参数是图片天数
-// 来源：https://github.com/xCss/bing
-function syncBingPhotoURLSync(number) {
-  wx.request({
-    url: 'https://bing.ioliu.cn/v1',
-    // 参数名	类型	是否必要	备注
-    // d	Int	否	自今日起第d天前的数据
-    // w	Int	否	图片宽度
-    // h	Int	否	图片高度
-    // p	Int	否	Page 页码:第x页
-    // size	Int	否	Size 条数:每页条数
-    // callback	String	否	JSONP的回调函数名
-    data: { d: number },
-    success: function (res) {
-      let tmpUrl = res.data.data.url
-      let tmpText = res.data.data.description
-      wx.setStorageSync('BingPhotoURL', tmpUrl)
-      wx.setStorageSync('BingPhotoText', tmpText)
-    }
-  })
-}
 
 // 同步今周是第几周到本地
 function syncWeek() {
@@ -66,15 +44,6 @@ function syncWeek() {
   let d2 = new Date(td.getFullYear(), td.getMonth() + 1, td.getDate())
   let w = ((d2 - d) / (1000 * 60 * 60 * 24));
   wx.setStorageSync('week', (w - (w % 7)) / 7)
-}
-
-//打开图片,点右上角可下载
-function previewImage(imageUrl) {
-  wx.previewImage({
-    urls: [
-      'imageUrl'
-    ]
-  })
 }
 
 // 获取用户信息
@@ -107,6 +76,38 @@ function openWelcomeText(that) {
   })
 }
 
+
+// 必应图片URL并本地同步到'BingPhotoURL',
+// 参数是图片天数
+// 来源：https://github.com/xCss/bing
+function syncBingPhotoURLSync(number) {
+  wx.request({
+    url: 'https://bing.ioliu.cn/v1',
+    // 参数名	类型	是否必要	备注
+    // d	Int	否	自今日起第d天前的数据
+    // w	Int	否	图片宽度
+    // h	Int	否	图片高度
+    // p	Int	否	Page 页码:第x页
+    // size	Int	否	Size 条数:每页条数
+    // callback	String	否	JSONP的回调函数名
+    data: { d: number },
+    success: function (res) {
+      let tmpUrl = res.data.data.url
+      let tmpText = res.data.data.description
+      wx.setStorageSync('BingPhotoURL', tmpUrl)
+      wx.setStorageSync('BingPhotoText', tmpText)
+    }
+  })
+}
+
+//打开图片,点右上角可下载
+function previewImage(imageUrl) {
+  wx.previewImage({
+    urls: [
+      'imageUrl'
+    ]
+  })
+}
 
 
 // //参数为所有课程,本周周数,星期几
