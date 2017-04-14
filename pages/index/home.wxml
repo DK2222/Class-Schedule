@@ -1,0 +1,22 @@
+<view class="page">
+  <view class="page__hd">
+    <view class="page__title">{{welcomeText}},{{userInfo.nickName}}</view>
+    <view class="page__desc">{{yiYan.data.hitokoto}} ——{{yiYan.data.from}}</view>
+  </view>
+  <view class="page__bd page__bd_spacing">
+    <view id="{{item.CourseName}}" class="card" wx:for-items="{{todayCourseslist}}" wx:key="{{item.Start}}" bindtap="clickCourse">
+      <view class="card_head">{{item.Start}}</view>
+      <view class="card_content">
+        <view class="card_title">{{item.CourseName}}</view>
+        <view class="card__desc">{{item.Room}} {{item.Teacher}}</view>
+      </view>
+    </view>
+    <view class="card" bindtap="clickPhoto">
+      <view class="photo">
+        <view class="photo_title">必应每日一图</view>
+        <image src="{{photoUrl}}" style="width:100%;"></image>
+        <view class="photo_content">{{photoText}}</view>
+      </view>
+    </view>
+  </view>
+</view>

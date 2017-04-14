@@ -1,6 +1,4 @@
 page {
-  background: #1c1c1c;
-  color: #fcfaf2;
 }
 
 .page, .page__bd {
@@ -12,6 +10,6 @@ page {
 }
 
 .weui-tab__content {
-  padding-top: 60px;
+  /*padding-top: 60px;*/
   text-align: center;
 }

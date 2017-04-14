@@ -12,9 +12,11 @@
       <view class="weui-tab__panel">
 
         <view class="weui-tab__content" hidden="{{activeIndex != 0}}">
+        <include src="home.wxml"/>
         </view>
 
         <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+        <include src="set.wxml"/>
         </view>
 
       </view>

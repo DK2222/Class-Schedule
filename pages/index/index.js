@@ -17,15 +17,50 @@ Page({
     sliderLeft: 0,
     welcomeText: '',
     days: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"],
+    yiYan: {},
+    todayCourseslist: {},
+    photoUrl: '',
+    photoText: '',
   },
 
   onLoad: function () {
 
-    // 初始化
-    setUserInfo(this)
-    openNav(this)
-    openWelcomeText(this)
+    syncWeek();
+    var that = this;
 
+    getBingPhotoURLSync(0, function (res) {
+      that.setData({
+        photoUrl: res.data.data.url,
+        photoText: res.data.data.description,
+      })
+    });
+
+    wx.setStorageSync('ClassName', '16移动应用')
+
+    getAllCoursesByClassName(wx.getStorageSync('ClassName'), function (res) {
+      var tmpCourses = [];
+      var a = res.Data;
+      var week = wx.getStorageSync('Week');
+      var day = new Date().getDay();
+      for (var i = 0; i < a.length; i++) {
+        var weeks = a[i].Weeks.split("-")
+        if (((a[i]).Day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
+          tmpCourses.push(a[i])
+        }
+      }
+      that.setData({
+        todayCourseslist: tmpCourses
+      });
+    });
+    // 初始化
+    getYiYan(function (res) {
+      that.setData({
+        yiYan: res
+      });
+    });
+    setUserInfo(this);
+    openNav(this);
+    openWelcomeText(this);
   },
 
   // 导航栏切换
@@ -35,16 +70,27 @@ Page({
       activeIndex: e.currentTarget.id
     });
   },
+
+  clickCourse: function (e) {
+    wx.setStorageSync('CourseName', e.currentTarget.id);
+    wx.navigateTo({
+      url: '../../pages/course/course'
+    });
+  },
+
+  clickPhoto: function () {
+    previewImage(this.data.photoUrl);
+  }
 })
 
 
 // 同步今周是第几周到本地
 function syncWeek() {
-  let d = new Date(2017, 2, 20)
-  let td = new Date()
-  let d2 = new Date(td.getFullYear(), td.getMonth() + 1, td.getDate())
+  let d = new Date(2017, 2, 20);
+  let td = new Date();
+  let d2 = new Date(td.getFullYear(), td.getMonth() + 1, td.getDate());
   let w = ((d2 - d) / (1000 * 60 * 60 * 24));
-  wx.setStorageSync('week', (w - (w % 7)) / 7)
+  wx.setStorageSync('Week', ((w - (w % 7)) / 7) + 1);
 }
 
 // 获取用户信息
@@ -58,7 +104,7 @@ function setUserInfo(that) {
 
 // 导航栏初始化
 function openNav(that) {
-  let sliderWidth = 96;
+  var sliderWidth = 90;
   wx.getSystemInfo({
     success: function (res) {
       that.setData({
@@ -77,11 +123,21 @@ function openWelcomeText(that) {
   })
 }
 
+function getYiYan(Cb) {
+  wx.request({
+    url: 'https://sslapi.hitokoto.cn/',
+    data: {},
+    success: function (res) {
+      Cb(res);
+    }
+  });
+}
+
 
 // 必应图片URL并本地同步到'BingPhotoURL',
 // 参数是图片天数
 // 来源：https://github.com/xCss/bing
-function syncBingPhotoURLSync(number) {
+function getBingPhotoURLSync(number, Cb) {
   wx.request({
     url: 'https://bing.ioliu.cn/v1',
     // 参数名	类型	是否必要	备注
@@ -93,10 +149,7 @@ function syncBingPhotoURLSync(number) {
     // callback	String	否	JSONP的回调函数名
     data: { d: number },
     success: function (res) {
-      let tmpUrl = res.data.data.url
-      let tmpText = res.data.data.description
-      wx.setStorageSync('BingPhotoURL', tmpUrl)
-      wx.setStorageSync('BingPhotoText', tmpText)
+      Cb(res);
     }
   })
 }
@@ -104,27 +157,25 @@ function syncBingPhotoURLSync(number) {
 //打开图片,点右上角可下载
 function previewImage(imageUrl) {
   wx.previewImage({
-    urls: [
-      'imageUrl'
-    ]
+    urls:[imageUrl]
   })
 }
 
 
-//参数为所有课程,本周周数,星期几
-//筛选今日课程并同步到本地
-// function syncTodayCourses(allCourses, week, day) {
-//   setTimeout(function () {
-//     var tmpCourses = []
-//     for (var i = 0; i < allCourses.length; i++) {
-//       var weeks = allCourses[i].weeks.split("-")
-//       if (((allCourses[i]).day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
-//         tmpCourses.push(allCourses[i])
-//       }
-//     }
-//     wx.setStorageSync('todayCourses', tmpCourses)
-//   }, 500)
-// }
+// 参数为所有课程,本周周数,星期几
+// 筛选今日课程并同步到本地
+function syncTodayCourses(allCourses, week, day) {
+  setTimeout(function () {
+    var tmpCourses = []
+    for (var i = 0; i < allCourses.length; i++) {
+      var weeks = allCourses[i].weeks.split("-")
+      if (((allCourses[i]).day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
+        tmpCourses.push(allCourses[i])
+      }
+    }
+    wx.setStorageSync('todayCourses', tmpCourses)
+  }, 500)
+}
 
 // 添加Note并保存id到classes.NotesId
 function addNote(ClassName, CourseName, Title, Content) {

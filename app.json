@@ -1,13 +1,14 @@
 {
   "pages":[
-    "pages/index/index"
+    "pages/index/index",
+    "pages/course/course"
   ],
   "window":{
-    "backgroundTextStyle":"light",
-    "backgroundColor":"#1c1c1c",
-    "navigationBarBackgroundColor": "#1c1c1c",
+    "backgroundTextStyle":"dark",
+    "backgroundColor":"#F8F8F8",
+    "navigationBarBackgroundColor": "#F8F8F8",
     "navigationBarTitleText": "课程表",
-    "navigationBarTextStyle":"white",
+    "navigationBarTextStyle":"black",
     "enablePullDownRefresh": true
   }
 }
