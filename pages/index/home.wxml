@@ -1,7 +1,8 @@
 <view class="page">
   <view class="page__hd">
     <view class="page__title">{{welcomeText}},{{userInfo.nickName}}</view>
-    <view class="page__desc">{{yiYan.data.hitokoto}} ——{{yiYan.data.from}}</view>
+    <view class="page__desc">{{yiYan.data.hitokoto}}</view>
+    <view class="page__desc"> ——{{yiYan.data.from}}</view>
   </view>
   <view class="page__bd page__bd_spacing">
     <view id="{{item.CourseName}}" class="card" wx:for-items="{{todayCourseslist}}" wx:key="{{item.Start}}" bindtap="clickCourse">

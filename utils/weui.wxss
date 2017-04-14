@@ -1048,10 +1048,11 @@ icon {
 }
 
 .weui-navbar {
+  background-color: #f8f8f8;
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
-  position: absolute;
+  position: fixed;
   z-index: 500;
   top: 0;
   width: 100%;

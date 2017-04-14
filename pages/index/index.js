@@ -35,7 +35,7 @@ Page({
       })
     });
 
-    wx.setStorageSync('ClassName', '16移动应用')
+    // wx.setStorageSync('ClassName', '16移动应用')
 
     getAllCoursesByClassName(wx.getStorageSync('ClassName'), function (res) {
       var tmpCourses = [];
@@ -52,7 +52,6 @@ Page({
         todayCourseslist: tmpCourses
       });
     });
-    // 初始化
     getYiYan(function (res) {
       that.setData({
         yiYan: res
@@ -80,6 +79,29 @@ Page({
 
   clickPhoto: function () {
     previewImage(this.data.photoUrl);
+  },
+
+  onPullDownRefresh: function () {
+    var that = this;
+    getYiYan(function (res) {
+      that.setData({
+        yiYan: res
+      });
+    });
+    wx.stopPullDownRefresh();
+  },
+
+  onShareAppMessage: function () {
+    return {
+      title: '今日课表',
+      path: '/page/index/home',
+      success: function(res) {
+        // 分享成功
+      },
+      fail: function(res) {
+        // 分享失败
+      }
+    }
   }
 })
 
@@ -157,7 +179,7 @@ function getBingPhotoURLSync(number, Cb) {
 //打开图片,点右上角可下载
 function previewImage(imageUrl) {
   wx.previewImage({
-    urls:[imageUrl]
+    urls: [imageUrl]
   })
 }
 
@@ -201,7 +223,7 @@ function addNote(ClassName, CourseName, Title, Content) {
   });
 }
 
-// 查找16语文教育1班的所有课程并打印
+// 查找16语文教育1班的所有课程
 function getAllCoursesByClassName(ClassName, Cb) {
   BmobUser.getAll('Classes', function (res) {
     for (var i = 0; i < res.length; i++) {

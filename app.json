@@ -7,8 +7,7 @@
     "backgroundTextStyle":"dark",
     "backgroundColor":"#F8F8F8",
     "navigationBarBackgroundColor": "#F8F8F8",
-    "navigationBarTitleText": "课程表",
-    "navigationBarTextStyle":"black",
-    "enablePullDownRefresh": true
+    "navigationBarTitleText": "今日课表",
+    "navigationBarTextStyle":"black"
   }
 }
