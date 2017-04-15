@@ -39,10 +39,29 @@ page {
 
 .card {
   background-color: #fff;
-  padding: 20rpx;
+  padding-top: 20rpx;
+  padding-bottom: 20rpx;
   margin-bottom: 20rpx;
   flex-direction: row;
   display: flex;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px 0px;
+  border-radius: 6rpx;
+}
+
+.set_card{
+  background-color: #fff;
+  padding-top: 10rpx;
+  padding-bottom: 10rpx;
+  margin-bottom: 20rpx;
+  flex-direction: row;
+  display: flex;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px 0px;
+  border-radius: 6rpx;
+}
+
+.card_splace {
+  padding-left: 20rpx;
+  padding-right: 20rpx;
 }
 
 .card_title {
@@ -86,4 +105,26 @@ page {
   text-align: left;
   font-size: 13px;
   color: #888;
+}
+
+.avatar {
+  border-radius: 50%;
+}
+
+.set_page {
+  text-align: center;
+}
+
+.nickName {
+  padding: 10rpx;
+  font-size: 16px;
+}
+
+.courseSwitch {
+  color: #888;
+  font-size: 13px;
+}
+
+.top{
+  background-color: #fff;
 }

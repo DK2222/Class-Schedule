@@ -1056,8 +1056,9 @@ icon {
   z-index: 500;
   top: 0;
   width: 100%;
-  border-bottom: 1rpx solid #ccc;
+  box-shadow: rgba(0,0,0,0.1) 0px 2px 5px 0px;
 }
+  /*border-bottom: 1rpx solid #ccc;*/
 
 .weui-navbar__item {
   position: relative;

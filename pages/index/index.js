@@ -16,17 +16,35 @@ Page({
     sliderOffset: 0,
     sliderLeft: 0,
     welcomeText: '',
-    days: ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期天"],
+    days: ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
     yiYan: {},
     todayCourseslist: {},
     photoUrl: '',
     photoText: '',
+    classesArray: [],
+    index: 0,
+    dayindex: 0,
   },
 
   onLoad: function () {
 
     syncWeek();
     var that = this;
+
+    this.setData({
+      index: wx.getStorageSync('index') - 0,
+      dayindex: new Date().getDay() - 0
+    });
+
+    BmobUser.getAll('Classes', function (res) {
+      var classesArray = [];
+      for (var i = 0; i < res.length; i++) {
+        classesArray.push(res[i].attributes.Name);
+      }
+      that.setData({
+        classesArray: classesArray
+      })
+    });
 
     getBingPhotoURLSync(0, function (res) {
       that.setData({
@@ -35,23 +53,19 @@ Page({
       })
     });
 
-    // wx.setStorageSync('ClassName', '16移动应用')
-
     getAllCoursesByClassName(wx.getStorageSync('ClassName'), function (res) {
-      var tmpCourses = [];
-      var a = res.Data;
-      var week = wx.getStorageSync('Week');
-      var day = new Date().getDay();
-      for (var i = 0; i < a.length; i++) {
-        var weeks = a[i].Weeks.split("-")
-        if (((a[i]).Day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
-          tmpCourses.push(a[i])
-        }
-      }
       that.setData({
-        todayCourseslist: tmpCourses
+        AllCourseslist: res.Data
       });
+      syncTodayCourses(res.Data, wx.getStorageSync('Week'), new Date().getDay());
     });
+
+    this.setData({
+      todayCourseslist: wx.getStorageSync('todayCourses')
+    });
+
+    console.log("初始化today");
+    console.log(this.data.todayCourseslist);
     getYiYan(function (res) {
       that.setData({
         yiYan: res
@@ -83,11 +97,17 @@ Page({
 
   onPullDownRefresh: function () {
     var that = this;
+
     getYiYan(function (res) {
       that.setData({
         yiYan: res
       });
     });
+
+    this.setData({
+      todayCourseslist: wx.getStorageSync('todayCourses')
+    });
+
     wx.stopPullDownRefresh();
   },
 
@@ -95,14 +115,34 @@ Page({
     return {
       title: '今日课表',
       path: '/page/index/home',
-      success: function(res) {
+      success: function (res) {
         // 分享成功
       },
-      fail: function(res) {
+      fail: function (res) {
         // 分享失败
       }
     }
-  }
+  },
+  bindPickerChange: function (e) {
+    var that = this
+    wx.setStorageSync('ClassName', that.data.classesArray[e.detail.value])
+    wx.setStorageSync('index', e.detail.value)
+    this.setData({
+      index: e.detail.value
+    })
+  },
+  bindPickerChange2: function (e) {
+    var that = this;
+    syncTodayCourses(this.data.AllCourseslist, wx.getStorageSync('Week'), e.detail.value);
+    console.log("切换")
+    console.log(e.detail.value)
+    setTimeout(function () {
+      that.setData({
+        dayindex: e.detail.value,
+        todayCourseslist: wx.getStorageSync('todayCourses')
+      })
+    }, 500)
+  },
 })
 
 
@@ -190,37 +230,13 @@ function syncTodayCourses(allCourses, week, day) {
   setTimeout(function () {
     var tmpCourses = []
     for (var i = 0; i < allCourses.length; i++) {
-      var weeks = allCourses[i].weeks.split("-")
-      if (((allCourses[i]).day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
+      var weeks = allCourses[i].Weeks.split("-")
+      if (((allCourses[i]).Day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
         tmpCourses.push(allCourses[i])
       }
     }
     wx.setStorageSync('todayCourses', tmpCourses)
   }, 500)
-}
-
-// 添加Note并保存id到classes.NotesId
-function addNote(ClassName, CourseName, Title, Content) {
-  BmobUser.add('Notes', {
-    Data: {
-      CourseName: CourseName,
-      Title: Title,
-      Content: Content
-    }
-  }, function (res) {
-    BmobUser.getAll('Classes', function (res2) {
-      for (var i = 0; i < res2.length; i++) {
-        var data = res2[i].attributes;
-        if (data.Name == ClassName) {
-          var tempNotesId = data.NotesId;
-          tempNotesId.push(res.id);
-          BmobUser.updataById('Classes', data.id, {
-            NotesId: tempNotesId
-          });
-        }
-      }
-    });
-  });
 }
 
 // 查找16语文教育1班的所有课程
