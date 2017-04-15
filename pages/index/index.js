@@ -1,76 +1,38 @@
 var app = getApp();
 var BmobUser = require('../../utils/bmobuser.js');
 
-// userInfo: 用户信息
-// tabs: tab标题
-// activeIndex: 页面下标
-// sliderOffset: !!!不要动!!!
-// sliderLeft: !!!不要动!!!
-// welcomeText: 欢迎text
-
 Page({
   data: {
-    userInfo: {},
-    tabs: ["主页", "设置"],
     activeIndex: 0,
     sliderOffset: 0,
     sliderLeft: 0,
-    welcomeText: '',
+    tabs: ["主页", "设置"],
     days: ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-    yiYan: {},
-    todayCourseslist: {},
-    photoUrl: '',
-    photoText: '',
-    classesArray: [],
-    index: 0,
-    dayindex: 0,
+    classIndex: 0,
+    dayIndex: new Date().getDay(),
   },
 
   onLoad: function () {
 
-    syncWeek();
     var that = this;
 
-    this.setData({
-      index: wx.getStorageSync('index') - 0,
-      dayindex: new Date().getDay() - 0
-    });
 
-    BmobUser.getAll('Classes', function (res) {
-      var classesArray = [];
-      for (var i = 0; i < res.length; i++) {
-        classesArray.push(res[i].attributes.Name);
-      }
+    // 获取必应美图
+    getBingPhoto(0, function (photo) {
       that.setData({
-        classesArray: classesArray
-      })
-    });
-
-    getBingPhotoURLSync(0, function (res) {
-      that.setData({
-        photoUrl: res.data.data.url,
-        photoText: res.data.data.description,
-      })
-    });
-
-    getAllCoursesByClassName(wx.getStorageSync('ClassName'), function (res) {
-      that.setData({
-        AllCourseslist: res.Data
-      });
-      syncTodayCourses(res.Data, wx.getStorageSync('Week'), new Date().getDay());
-    });
-
-    this.setData({
-      todayCourseslist: wx.getStorageSync('todayCourses')
-    });
-
-    console.log("初始化today");
-    console.log(this.data.todayCourseslist);
-    getYiYan(function (res) {
-      that.setData({
-        yiYan: res
+        photo: photo.data.data
       });
     });
+
+    // 获取一言
+    getYiYan(function (data) {
+      that.setData({
+        yiYan: data
+      });
+    })
+
+    // 必要初始化
+    run(this);
     setUserInfo(this);
     openNav(this);
     openWelcomeText(this);
@@ -84,33 +46,18 @@ Page({
     });
   },
 
-  clickCourse: function (e) {
-    wx.setStorageSync('CourseName', e.currentTarget.id);
-    wx.navigateTo({
-      url: '../../pages/course/course'
-    });
-  },
-
+  // 点击照片
   clickPhoto: function () {
-    previewImage(this.data.photoUrl);
+    previewImage(this.data.photo.url);
   },
 
+  // 刷新
   onPullDownRefresh: function () {
-    var that = this;
-
-    getYiYan(function (res) {
-      that.setData({
-        yiYan: res
-      });
-    });
-
-    this.setData({
-      todayCourseslist: wx.getStorageSync('todayCourses')
-    });
-
+    getNews(this);
     wx.stopPullDownRefresh();
   },
 
+  //分享
   onShareAppMessage: function () {
     return {
       title: '今日课表',
@@ -123,36 +70,47 @@ Page({
       }
     }
   },
-  bindPickerChange: function (e) {
-    var that = this
-    wx.setStorageSync('ClassName', that.data.classesArray[e.detail.value])
-    wx.setStorageSync('index', e.detail.value)
+
+  //班级选择器事件
+  classbindPickerChange: function (e) {
+
+    // 切换并保存班级
     this.setData({
-      index: e.detail.value
-    })
+      classIndex: e.detail.value,
+    });
+    wx.setStorageSync('classindex', e.detail.value);
+
+    getNews(this);
+
+    run(this);
+
   },
-  bindPickerChange2: function (e) {
-    var that = this;
-    syncTodayCourses(this.data.AllCourseslist, wx.getStorageSync('Week'), e.detail.value);
-    console.log("切换")
-    console.log(e.detail.value)
-    setTimeout(function () {
-      that.setData({
-        dayindex: e.detail.value,
-        todayCourseslist: wx.getStorageSync('todayCourses')
-      })
-    }, 500)
+
+  weekbindPickerChange: function (e) {
+    this.setData({
+      dayIndex: e.detail.value,
+    });
+
+    // 通过week，day筛选今日课程
+    var todaycourses = getTodayCourses(wx.getStorageSync('courses').Data, getWeek(), this.data.dayIndex);
+    console.log("todaycourses");
+    console.log(todaycourses);
+
+    // 并保存
+    this.setData({
+      todayCourses: todaycourses,
+    });
   },
 })
 
 
-// 同步今周是第几周到本地
-function syncWeek() {
+// 返回今周是第几周到本地
+function getWeek() {
   let d = new Date(2017, 2, 20);
   let td = new Date();
   let d2 = new Date(td.getFullYear(), td.getMonth() + 1, td.getDate());
   let w = ((d2 - d) / (1000 * 60 * 60 * 24));
-  wx.setStorageSync('Week', ((w - (w % 7)) / 7) + 1);
+  return ('Week', ((w - (w % 7)) / 7) + 1);
 }
 
 // 获取用户信息
@@ -185,6 +143,7 @@ function openWelcomeText(that) {
   })
 }
 
+// 获取一言
 function getYiYan(Cb) {
   wx.request({
     url: 'https://sslapi.hitokoto.cn/',
@@ -196,61 +155,36 @@ function getYiYan(Cb) {
 }
 
 
-// 必应图片URL并本地同步到'BingPhotoURL',
+// 必应图片
 // 参数是图片天数
 // 来源：https://github.com/xCss/bing
-function getBingPhotoURLSync(number, Cb) {
+// 参数名	类型	是否必要	备注
+// d	Int	否	自今日起第d天前的数据
+// w	Int	否	图片宽度
+// h	Int	否	图片高度
+// p	Int	否	Page 页码:第x页
+// size	Int	否	Size 条数:每页条数
+// callback	String	否	JSONP的回调函数名
+function getBingPhoto(number, Cb) {
   wx.request({
     url: 'https://bing.ioliu.cn/v1',
-    // 参数名	类型	是否必要	备注
-    // d	Int	否	自今日起第d天前的数据
-    // w	Int	否	图片宽度
-    // h	Int	否	图片高度
-    // p	Int	否	Page 页码:第x页
-    // size	Int	否	Size 条数:每页条数
-    // callback	String	否	JSONP的回调函数名
     data: { d: number },
     success: function (res) {
       Cb(res);
     }
-  })
+  });
 }
-
-//打开图片,点右上角可下载
-function previewImage(imageUrl) {
-  wx.previewImage({
-    urls: [imageUrl]
-  })
-}
-
 
 // 参数为所有课程,本周周数,星期几
-// 筛选今日课程并同步到本地
-function syncTodayCourses(allCourses, week, day) {
-  setTimeout(function () {
-    var tmpCourses = []
-    for (var i = 0; i < allCourses.length; i++) {
-      var weeks = allCourses[i].Weeks.split("-")
-      if (((allCourses[i]).Day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
-        tmpCourses.push(allCourses[i])
-      }
+function getTodayCourses(allCourses, week, day) {
+  var tmpCourses = [];
+  for (var i = 0; i < allCourses.length; i++) {
+    var weeks = allCourses[i].Weeks.split("-")
+    if (((allCourses[i]).Day == day + "") && ((weeks[0] <= week) && (week <= weeks[1]))) {
+      tmpCourses.push(allCourses[i]);
     }
-    wx.setStorageSync('todayCourses', tmpCourses)
-  }, 500)
-}
-
-// 查找16语文教育1班的所有课程
-function getAllCoursesByClassName(ClassName, Cb) {
-  BmobUser.getAll('Classes', function (res) {
-    for (var i = 0; i < res.length; i++) {
-      var data = res[i].attributes;
-      if (data.Name == ClassName) {
-        BmobUser.getOneById('Courses', data.CoursesId, function (res2) {
-          Cb(res2.attributes);
-        });
-      }
-    }
-  });
+  }
+  return tmpCourses;
 }
 
 // 添加课程表数据到Courses并添加id到Classes.CoursesId
@@ -263,4 +197,73 @@ function addCourse(Array, ClassName) {
       CoursesId: res.id
     }, function (res) { })
   })
+}
+
+// 获取所有班级名称
+function getClassNames() {
+  var classes = wx.getStorageSync('allclass');
+  var tmp = [];
+  for (var i = 0; i < classes.length; i++) {
+    tmp.push(classes[i].Name);
+  }
+  return tmp;
+}
+
+function getNews(that) {
+
+  // 获取所有班级并保存到本地
+  BmobUser.getAll('Classes', function (allclass) {
+    console.log("allclass");
+    console.log(allclass);
+    wx.setStorageSync('allclass', allclass);
+
+    // 通过classindex获取your class
+    var yourclass = allclass[that.data.classIndex];
+    console.log("yourclass");
+    console.log(yourclass);
+    // 通过yourClass的CourseId获取AllCourse
+    var courseid = yourclass.attributes.CoursesId;
+    BmobUser.getOneById('Courses', courseid, function (courses) {
+      console.log("courses");
+      console.log(courses);
+      // 把courses保存到本地
+      wx.setStorageSync('courses', courses);
+    });
+  });
+
+  // 获取一言
+  getYiYan(function (data) {
+    that.setData({
+      yiYan: data
+    });
+  })
+}
+
+function run(that) {
+  // 更新classindex,默认为0
+  that.setData({
+    classIndex: wx.getStorageSync('classindex') || 0
+  });
+
+  // 如果找不到allclass则刷新
+  if (wx.getStorageSync('allclass') + "" == "") {
+    getNews(that);
+    console.log("调用了刷新");
+  }
+
+  setTimeout(function () {
+    // 初始化classArray
+    that.setData({
+      classesArray: getClassNames()
+    });
+    // 通过week，day筛选今日课程
+    var todaycourses = getTodayCourses(wx.getStorageSync('courses').Data, getWeek(), that.data.dayIndex);
+    console.log("todaycourses");
+    console.log(todaycourses);
+
+    // 并保存
+    that.setData({
+      todayCourses: todaycourses,
+    });
+  }, 500);
 }

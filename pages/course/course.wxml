@@ -1,5 +1,7 @@
 <view class="page">
     <view class="top">
-        
+        <view class="top_title">
+        {{course.CourseName}}
+        </view>
     </view>
 </view>

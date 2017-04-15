@@ -1,6 +1,6 @@
 <view class="page">
   <view class="set_page">
-    <view style="background-image:url({{photoUrl}});position:relative;top:-5px;">
+    <view style="background-image:url({{photo.url}});position:relative;top:-5px;">
       <image class="avatar" src="{{userInfo.avatarUrl}}" style="width:100px;margin:auto;position:relative;top:5px;" mode="widthFix"></image>
     </view>
   </view>
@@ -8,16 +8,16 @@
   <view class="set_card" style="margin:20rpx">
     <view class="weui-cells__title">班级</view>
     <view style="">
-      <picker bindchange="bindPickerChange" value="{{index}}" range="{{classesArray}}" style="width:100%;">
-        <view class="weui-input">{{classesArray[index]}}</view>
+      <picker bindchange="classbindPickerChange" value="{{classIndex}}" range="{{classesArray}}" style="width:100%;">
+        <view class="weui-input">{{classesArray[classIndex]}}</view>
       </picker>
     </view>
   </view>
   <view class="set_card" style="margin:20rpx">
     <view class="weui-cells__title">星期</view>
     <view style="">
-      <picker bindchange="bindPickerChange2" value="{{dayindex}}" range="{{days}}">
-        <view class="weui-input">{{days[dayindex]}}</view>
+      <picker bindchange="weekbindPickerChange" value="{{dayIndex}}" range="{{days}}">
+        <view class="weui-input">{{days[dayIndex]}}</view>
       </picker>
     </view>
   </view>

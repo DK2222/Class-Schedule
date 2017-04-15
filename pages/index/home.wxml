@@ -5,7 +5,7 @@
     <view class="page__desc"> ——{{yiYan.data.from}}</view>
   </view>
   <view class="page__bd page__bd_spacing">
-    <view id="{{item.CourseName}}" class="card card_splace" wx:for-items="{{todayCourseslist}}" wx:key="{{item.Start}}" bindtap="clickCourse">
+    <view id="{{item.CourseName}}" class="card card_splace" wx:for-items="{{todayCourses}}" wx:key="{{item.Start}}" bindtap="clickCourse">
       <view class="card_head">{{item.Start}}</view>
       <view class="card_content">
         <view class="card_title">{{item.CourseName}}</view>
@@ -15,8 +15,8 @@
     <view class="card" bindtap="clickPhoto">
       <view class="photo">
         <view class="photo_title card_splace">必应每日一图</view>
-        <image src="{{photoUrl}}" style="width:100%;" mode="widthFix"></image>
-        <view class="photo_content card_splace">{{photoText}}</view>
+        <image src="{{photo.url}}" style="width:100%;" mode="widthFix"></image>
+        <view class="photo_content card_splace">{{photo.description}}</view>
       </view>
     </view>
   </view>
