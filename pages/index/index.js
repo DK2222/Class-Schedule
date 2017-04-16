@@ -130,6 +130,21 @@ Page({
         // complete
       }
     })
+  },
+
+  longTapClass:function(e){
+    wx.navigateTo({
+      url: '../../pages/classupdata/classupdate',
+      success: function(res){
+        // success
+      },
+      fail: function(res) {
+        // fail
+      },
+      complete: function(res) {
+        // complete
+      }
+    })
   }
 })
 
