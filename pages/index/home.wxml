@@ -5,7 +5,7 @@
     <view class="page__desc"> ——{{yiYan.data.from}}</view>
   </view>
   <view class="page__bd page__bd_spacing">
-    <view id="{{item.CourseName}}" class="card card_splace" wx:for-items="{{todayCourses}}" wx:key="{{item.Start}}" bindtap="clickCourse">
+    <view id="{{index}}" class="card card_splace" wx:for-items="{{todayCourses}}" wx:key="{{item.Start}}" bindtap="clickCourse">
       <view class="card_head">{{item.Start}}</view>
       <view class="card_content">
         <view class="card_title">{{item.CourseName}}</view>

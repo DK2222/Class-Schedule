@@ -1,7 +1,24 @@
 <view class="page">
-    <view class="top">
-        <view class="top_title">
-        {{course.CourseName}}
-        </view>
+  <view class="course">
+    <view class="course_name">{{course.CourseName}}</view>
+    <view class="course_list">
+      <view class="course_list_name">教室</view>
+      <view class="course_list_content">{{course.Room}}</view>
     </view>
+    <view class="course_list">
+      <view class="course_list_name">教师</view>
+      <view class="course_list_content">{{course.Teacher}}</view>
+    </view>
+    <view class="course_list">
+      <view class="course_list_name">节数</view>
+      <view class="course_list_content">{{course.Start}} - {{course.End}}节</view>
+    </view>
+  </view>
+
+  <view class="notes">
+  </view>
+
+  <view class="add_notes" bindtap="addClick">
+  +
+  </view>
 </view>

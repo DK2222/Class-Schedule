@@ -1,7 +1,8 @@
 {
   "pages":[
     "pages/index/index",
-    "pages/course/course"
+    "pages/course/course",
+    "pages/note/note"
   ],
   "window":{
     "backgroundTextStyle":"dark",

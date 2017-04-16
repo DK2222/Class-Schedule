@@ -101,6 +101,24 @@ Page({
       todayCourses: todaycourses,
     });
   },
+
+  clickCourse:function(e){
+    // 保存点击的课程到本地
+    wx.setStorageSync('course', this.data.todayCourses[e.currentTarget.id]);
+    // 再打开课程详细
+    wx.navigateTo({
+      url: '../../pages/course/course',
+      success: function(res){
+        // success
+      },
+      fail: function(res) {
+        // fail
+      },
+      complete: function(res) {
+        // complete
+      }
+    })
+  }
 })
 
 
