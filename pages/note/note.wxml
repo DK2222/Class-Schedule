@@ -1,0 +1,24 @@
+<view class="weui-cells__title">标题</view>
+<view class="weui-cells weui-cells_after-title">
+  <view class="weui-cell weui-cell_input">
+    <view class="weui-cell__bd">
+      <input class="weui-input" placeholder="请输入文本" bindinput="titleBindInput" />
+    </view>
+  </view>
+</view>
+<view class="weui-cells__title">内容</view>
+<view class="weui-btn-area">
+</view>
+<form bindsubmit="addNote">
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell">
+      <view class="weui-cell__bd">
+        <textarea class="weui-textarea" placeholder="请输入文本" style="height: 3.3em" name="textarea" />
+        <view class="weui-textarea-counter">{{yyyy}}-{{mm}}-{{dd}}</view>
+      </view>
+    </view>
+  </view>
+  <view style="padding: 15px;">
+    <button class="weui-btn" type="primary" form-type="submit"> 提交 </button>
+  </view>
+</form>

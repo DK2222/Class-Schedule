@@ -1,60 +1,78 @@
+var BmobUser = require('../../utils/bmobuser.js');
 // pages/course/course.js
+
 Page({
   data: {
-    todayCourses: wx.getStorageSync('todayCourses'),
     course: {},
+    notes: [],
   },
   onLoad: function (options) {
-    // 页面初始化 options为页面跳转所带来的参数
-    var todayCourses = this.data.todayCourses;
-    for (var i = 0; i < todayCourses.length; i++) {
-      if (todayCourses[i].CourseName == wx.getStorageSync('CourseName')) {
-        this.setData({
-          course: todayCourses[i],
-        })
-      }
-    }
-    wx.setNavigationBarTitle({
-      title: "课程详细",
-      success: function (res) {
-      }
-    })
   },
   onReady: function () {
     // 页面渲染完成
   },
   onShow: function () {
     // 页面显示
+    // 页面初始化 options为页面跳转所带来的
+    var that = this;
+    this.setData({
+      course: wx.getStorageSync('course')
+    });
+    BmobUser.getAll('Classes', function (allclass) {
+      wx.setStorageSync('allclass', allclass);
+      var noteId = allclass[wx.getStorageSync('classindex')].attributes.NoteId;
+      wx.setStorageSync('noteid', noteId);
+      BmobUser.getById('Notes', noteId, function (e) {
+        var notes = e.attributes.Data;
+        var tmp = []
+        for (var i = 0; i < notes.length; i++) {
+          if (notes[i].CourseName === that.data.course.CourseName) {
+            tmp.push(notes[i]);
+          }
+        }
+        that.setData({
+          notes: tmp
+        });
+        wx.setStorageSync('notes', notes);
+      });
+    });
   },
   onHide: function () {
     // 页面隐藏
   },
   onUnload: function () {
     // 页面关闭
-  }
-})
-
-
-// 添加Note并保存id到classes.NotesId
-function addNote(ClassName, CourseName, Title, Content) {
-  BmobUser.add('Notes', {
-    Data: {
-      CourseName: CourseName,
-      Title: Title,
-      Content: Content
-    }
-  }, function (res) {
-    BmobUser.getAll('Classes', function (res2) {
-      for (var i = 0; i < res2.length; i++) {
-        var data = res2[i].attributes;
-        if (data.Name == ClassName) {
-          var tempNotesId = data.NotesId;
-          tempNotesId.push(res.id);
-          BmobUser.updataById('Classes', data.id, {
-            NotesId: tempNotesId
+  },
+  addClick: function () {
+    wx.navigateTo({
+      url: '../../pages/note/note',
+    })
+  },
+  clickNote: function (e) {
+    var that = this;
+    wx.showModal({
+      title: '提示',
+      content: '确定要删除吗？',
+      success: function (res) {
+        if (res.confirm) {
+          var notes = wx.getStorageSync('notes');
+          var theDel = that.data.notes[e.currentTarget.id];
+          for (var i = 0; i < notes.length; i++) {
+            if ((notes[i].Title === theDel.Title) && (notes[i].Content === theDel.Content) && (notes[i].Date === theDel, Date)) {
+              notes.splice(i, 1);
+            }
+          }
+          BmobUser.updataById('Notes', wx.getStorageSync('noteid'), {
+            Data: notes
           });
+          that.setData({
+            notes: notes
+          });
+          // console.log('用户点击确定')
+        } else if (res.cancel) {
+          // console.log('用户点击取消')
         }
       }
-    });
-  });
-}
+    })
+  }
+})

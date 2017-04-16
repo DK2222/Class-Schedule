@@ -101,6 +101,24 @@ Page({
       todayCourses: todaycourses,
     });
   },
+
+  clickCourse:function(e){
+    // 保存点击的课程到本地
+    wx.setStorageSync('course', this.data.todayCourses[e.currentTarget.id]);
+    // 再打开课程详细
+    wx.navigateTo({
+      url: '../../pages/course/course',
+      success: function(res){
+        // success
+      },
+      fail: function(res) {
+        // fail
+      },
+      complete: function(res) {
+        // complete
+      }
+    })
+  }
 })
 
 
@@ -223,7 +241,7 @@ function getNews(that) {
     console.log(yourclass);
     // 通过yourClass的CourseId获取AllCourse
     var courseid = yourclass.attributes.CoursesId;
-    BmobUser.getOneById('Courses', courseid, function (courses) {
+    BmobUser.getById('Courses', courseid, function (courses) {
       console.log("courses");
       console.log(courses);
       // 把courses保存到本地
@@ -258,6 +276,7 @@ function run(that) {
     });
     // 通过week，day筛选今日课程
     var todaycourses = getTodayCourses(wx.getStorageSync('courses').Data, getWeek(), that.data.dayIndex);
+    // var todaycourses = getTodayCourses(wx.getStorageSync('courses').Data, getWeek(), 4);    
     console.log("todaycourses");
     console.log(todaycourses);
 
