@@ -48,7 +48,19 @@ Page({
 
   // 点击照片
   clickPhoto: function () {
-    previewImage(this.data.photo.url);
+    wx.previewImage({
+      // current: 'String', // 当前显示图片的链接，不填则默认为 urls 的第一张
+      urls: [this.data.photo.url],
+      success: function(res){
+        // success
+      },
+      fail: function(res) {
+        // fail
+      },
+      complete: function(res) {
+        // complete
+      }
+    })
   },
 
   // 刷新
