@@ -3,6 +3,12 @@ Page({
   data: {},
   onLoad: function (options) {
     // 页面初始化 options为页面跳转所带来的参数
+    var date = new Date();
+    this.setData({
+      yyyy:date.getFullYear(),
+      mm:date.getMonth(),
+      dd:date.getDate()
+    });
   },
   onReady: function () {
     // 页面渲染完成
@@ -15,23 +21,40 @@ Page({
   },
   onUnload: function () {
     // 页面关闭
+  },
+  titleBindInput: function (e) {
+    this.setData({
+      inputTitleValue: e.detail.value
+    });
+  },
+  contentBindInput: function (e) {
+    this.setData({
+      inputConentValue: e.detail.value
+    });
+  },
+  addNote: function (e) {
+    addNote(this.data.inputTitleValue, e.detail.value.textarea);
+    wx.navigateBack({
+      delta: 1, // 回退前 delta(默认为1) 页面
+    })
   }
 })
 
 
-// 添加Note并保存id到classes.NotesId
+// 添加Note到Notes
 function addNote(Title, Content) {
-  var tmp = wx.getStorageSync('allclass')[wx.getStorageSync('classindex')].NotesId;
-  BmobUser.add('Notes', {
-    Data: {
-      CourseName: wx.getStorageSync('course').CourseName,
-      Title: Title,
-      Content: Content
-    }
-  }, function (add) {
-    tmp.push(add.id);
-    BmobUser.updataById('Classes', wx.getStorageSync('allclass')[wx.getStorageSync('classindex')].objectId, {
-      NotesId: tmp,
-    });
+  var BmobUser = require('../../utils/bmobuser.js');
+  var notes = wx.getStorageSync('notes');
+  var d = new Date();
+  console.log(d);
+  notes.push({
+    Title:Title,
+    Content:Content,
+    CourseName:wx.getStorageSync('course').CourseName,
+    Date:d.getFullYear() + "," + d.getMonth() + "," + d.getDate()
+  });
+  // console.log(wx.getStorageSync('noteid'))
+  BmobUser.updataById('Notes', wx.getStorageSync('noteid'), {
+    Data:notes
   });
 }
