@@ -48,7 +48,7 @@ page {
   border-radius: 6rpx;
 }
 
-.set_card{
+.set_card {
   background-color: #fff;
   padding-top: 10rpx;
   padding-bottom: 10rpx;
@@ -125,34 +125,35 @@ page {
   font-size: 13px;
 }
 
-.course{
+.course {
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px 0px;
 }
 
-.course_name{
+.course_name {
   font-size: 33px;
   color: #1aad19;
 }
 
-.course_list{
+.course_list {
   display: flex;
   flex-direction: row;
   margin-left: 20px;
   margin-right: 20px;
 }
-.course_list_name{
+
+.course_list_name {
   color: #888;
   font-size: 13px;
 }
-.course_list_content{
+
+.course_list_content {
   margin-left: 5px;
 }
 
-.add_notes{
+.add_notes {
   width: 50px;
   height: 50px;
-  display: flex;
   background-color: #1aad19;
   box-shadow: 1px 2px 5px #888;
   border-radius: 50%;
@@ -160,8 +161,15 @@ page {
   bottom: 50px;
   right: 30px;
   z-index: 5;
+}
+
+.add_notes_text {
+  width: 50px;
+  height: 50px;
   color: #fff;
   font-size: 50px;
-  align-items: center;
+  z-index: 6;
+  display: flex;
   justify-content: center;
+  align-items: center;
 }

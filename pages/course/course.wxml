@@ -26,6 +26,6 @@
     </view>
   </view>
   <view class="add_notes" bindtap="addClick">
-    +
+    <view class="add_notes_text">+</view>
   </view>
 </view>
