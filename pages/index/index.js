@@ -262,6 +262,7 @@ function run(that) {
   that.setData({
     classIndex: wx.getStorageSync('classindex') || 0
   });
+  wx.setStorageSync('classindex', that.data.classIndex);
 
   // 如果找不到allclass则刷新
   if (wx.getStorageSync('allclass') + "" == "") {
