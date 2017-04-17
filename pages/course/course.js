@@ -42,7 +42,7 @@ Page({
           // 遍历所有note
           for (var i = 0; i < notes.length; i++) {
             // 找到和删除对象相同的所有对象
-            if ((notes[i].Title === theDel.Title) && (notes[i].Content === theDel.Content) && (notes[i].Date === theDel, Date)) {
+            if ((notes[i].Title === theDel.Title) && (notes[i].Content === theDel.Content) && (notes[i].Date === theDel, Date) && (notes[i]. CourseName === theDel.CourseName)) {
               // 并删除
               notes.splice(i, 1);
             }
