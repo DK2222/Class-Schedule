@@ -5,9 +5,9 @@
     </view>
   </view>
   <view class="nickName" style="position:relative;top:-5px;">{{userInfo.nickName}}</view>
-  <view class="set_card" style="margin:20rpx">
+  <view class="set_card" style="margin:20rpx" catchlongtap="longTapClass">
     <view class="weui-cells__title">班级</view>
-    <view style="">
+    <view>
       <picker bindchange="classbindPickerChange" value="{{classIndex}}" range="{{classesArray}}" style="width:100%;">
         <view class="weui-input">{{classesArray[classIndex]}}</view>
       </picker>

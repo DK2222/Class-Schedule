@@ -65,6 +65,13 @@ Page({
           BmobUser.updataById('Notes', wx.getStorageSync('noteid'), {
             Data: notes
           });
+
+          notes = that.data.notes;
+          for (var i = 0; i < notes.length; i++) {
+            if ((notes[i].Title === theDel.Title) && (notes[i].Content === theDel.Content) && (notes[i].Date === theDel, Date)) {
+              notes.splice(i, 1);
+            }
+          }
           that.setData({
             notes: notes
           });

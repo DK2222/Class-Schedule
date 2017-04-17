@@ -2,7 +2,8 @@
   "pages":[
     "pages/index/index",
     "pages/course/course",
-    "pages/note/note"
+    "pages/note/note",
+    "pages/classupdata/classupdate"
   ],
   "window":{
     "backgroundTextStyle":"dark",
